@@ -1,13 +1,27 @@
 {
-  "version": 2,
-  "rewrites": [
-    {
-      "source": "/(auth|api|chat)(/.*)?",
-      "destination": "/api/index.js"
+    "services": {
+        "frontend": {
+            "root": "frontend",
+            "framework": "vite"
+        },
+        "backend": {
+            "root": "backend"
+        }
     },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/dist/$1"
-    }
-  ]
+    "rewrites": [
+        {
+            "source": "/(auth|chat|api)(/.*)?",
+            "destination": {
+                "type": "service",
+                "service": "backend"
+            }
+        },
+        {
+            "source": "/(.*)",
+            "destination": {
+                "type": "service",
+                "service": "frontend"
+            }
+        }
+    ]
 }
