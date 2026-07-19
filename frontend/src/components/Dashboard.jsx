@@ -48,7 +48,7 @@ const Dashboard = ({ userEmail, onLogout }) => {
         </div>
       </nav>
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-y-auto">
         {activeTab === "chat" && <ChatView />}
         {activeTab === "routines" && <RoutineBuilder />}
         {activeTab === "checkins" && <CheckinView />}
