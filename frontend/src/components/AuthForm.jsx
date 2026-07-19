@@ -20,7 +20,7 @@ const AuthForm = ({ onAuthSuccess }) => {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Something went wrong");
+      if (!res.ok) throw new Error(data.message || "Something went wrong");
       onAuthSuccess(data.email);
     } catch (err) {
       setError(err.message || "An error occurred");
