@@ -7,16 +7,50 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 
+// Fail fast on missing runtime environment variables (except in testing contexts)
+if (process.env.NODE_ENV !== "test") {
+  const REQUIRED_ENV = ["MONGODB_URI", "JWT_SECRET", "GROQ_API_KEY"];
+  for (const envVar of REQUIRED_ENV) {
+    if (!process.env[envVar]) {
+      console.error(`CRITICAL BOOT CONFIG ERROR: Environment variable "${envVar}" is missing.`);
+      process.exit(1);
+    }
+  }
+}
+
 const app = express();
+
+const ALLOWED_ORIGINS = [
+  "http://localhost:5173",
+  "https://ai-mental-health-qyxd.vercel.app",
+];
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Allow requests with no origin header (like mobile apps, curls, or serverless rewrites)
+      if (!origin) return callback(null, true);
+      if (ALLOWED_ORIGINS.indexOf(origin) === -1) {
+        const errorMsg = `CORS Policy Error: Origin '${origin}' is not authorized.`;
+        return callback(new Error(errorMsg), false);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   }),
 );
 app.use(express.json());
 app.use(cookieParser());
+
+// Standard system health check endpoint
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    uptime: `${Math.floor(process.uptime())}s`,
+    database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+  });
+});
 
 const { getReply } = require("./models/chatModel");
 const { requireAuth } = require("./middleware/authMiddleware");
