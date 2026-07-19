@@ -1,10 +1,10 @@
-const http = require("http");
+const https = require("https");
 
-const TARGET_HOST = "localhost";
-const TARGET_PORT = 3000;
+const TARGET_HOST = "ai-mental-health-qyxd.vercel.app";
+const TARGET_PORT = 443;
 const TARGET_PATH = "/auth/logout"; // Raw route without DB query bottleneck to measure Express overhead
-const CONCURRENCY = 50;            // Number of concurrent connections
-const TOTAL_REQUESTS = 1000;       // Total requests to complete
+const CONCURRENCY = 10;            // Lower concurrency for Vercel Hobby limits
+const TOTAL_REQUESTS = 200;        // Total requests to complete
 
 let completedRequests = 0;
 let failedRequests = 0;
@@ -33,7 +33,7 @@ function sendRequest() {
     },
   };
 
-  const req = http.request(options, (res) => {
+  const req = https.request(options, (res) => {
     let body = "";
     res.on("data", (chunk) => {
       body += chunk;
