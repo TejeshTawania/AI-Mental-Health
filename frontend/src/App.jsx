@@ -1,39 +1,39 @@
 import { useState } from "react";
 
 const App = () => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]); // {role: 'user'|'bot', text: string}[]
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const sendMessage = async () => {
     if (!input.trim()) return;
-    const userMessage = { role: "user", content: input };
+
+    const userMessage = { role: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:3000/chat", {
+      const res = await fetch("http://localhost:3000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage.content }),
+        body: JSON.stringify({ message: userMessage.text }),
       });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", text: data.message },
-      ]);
-    } catch (error) {
-      console.error("Error:", error);
-      setError("Failed to connect to the server");
+
+      if (!res.ok) throw new Error("Server returned an error");
+
+      const data = await res.json();
+      setMessages((prev) => [...prev, { role: "bot", text: data.message }]);
+    } catch (err) {
+      console.error("Error connecting to backend", err);
+      setError("Something went wrong. Try again.");
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="text-center mt-0.5">
       <div>
