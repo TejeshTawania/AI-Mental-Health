@@ -1,4 +1,6 @@
-require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") });
+require("dotenv").config({
+  path: require("path").resolve(__dirname, "../.env"),
+});
 
 const express = require("express");
 const cors = require("cors");
@@ -7,52 +9,52 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
-
-
-
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 const { getReply } = require("./models/chatModel");
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-
-
-
-  const { requireAuth } = require("./middleware/authMiddleware");
+const { requireAuth } = require("./middleware/authMiddleware");
 const {
   detectCrisisLanguage,
-  getCrisisResponse
+  getCrisisResponse,
 } = require("./models/crisisModel");
 
-  const authRoutes = require("./routes/authRoutes");
+const authRoutes = require("./routes/authRoutes");
 app.use("/auth", authRoutes);
 
-app.post('/chat',requireAuth, async (req, res) => {
-    const messages = req.body.messages;
-    if (!Array.isArray(messages) || messages.length === 0) {
-        return res.status(400).json({ error: 'message is required' });
-    }
-    const latestMessage = messages[messages.length-1];
-    if(detectCrisisLanguage(latestMessage.text)){
-        return res.json({message: getCrisisResponse(), isCrisisResponse: true})
-    }
-    try {
-        const reply = await getReply(messages);
-        res.json({ message: reply , isCrisisResponse: false});
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Something went wrong' });
-    }
+app.post("/chat", requireAuth, async (req, res) => {
+  const messages = req.body.messages;
+  if (!Array.isArray(messages) || messages.length === 0) {
+    return res.status(400).json({ error: "message is required" });
+  }
+  const latestMessage = messages[messages.length - 1];
+  if (detectCrisisLanguage(latestMessage.text)) {
+    return res.json({ message: getCrisisResponse(), isCrisisResponse: true });
+  }
+  try {
+    const reply = await getReply(messages);
+    res.json({ message: reply, isCrisisResponse: false });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong" });
+  }
 });
+
+const checkinRoutes = require("./routes/checkinRoutes");
+app.use("/checkin", checkinRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
