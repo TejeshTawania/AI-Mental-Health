@@ -17,21 +17,27 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+
 const { getReply } = require("./models/chatModel");
-
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
-
 const { requireAuth } = require("./middleware/authMiddleware");
 const {
   detectCrisisLanguage,
   getCrisisResponse,
 } = require("./models/crisisModel");
 
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
 const authRoutes = require("./routes/authRoutes");
 app.use("/auth", authRoutes);
+
+const routineRoutes = require("./routes/routineRoutes");
+app.use("/api/routine", routineRoutes);
+
+const checkinRoutes = require("./routes/checkinRoutes");
+app.use("/api/checkin", checkinRoutes);
 
 app.post("/chat", requireAuth, async (req, res) => {
   const messages = req.body.messages;
@@ -50,9 +56,6 @@ app.post("/chat", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Something went wrong" });
   }
 });
-
-const checkinRoutes = require("./routes/checkinRoutes");
-app.use("/checkin", checkinRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
