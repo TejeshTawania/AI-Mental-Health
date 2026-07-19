@@ -7,6 +7,9 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
+
+
+
 app.use(cors({
   origin: "http://localhost:5173",
   credentials: true,
@@ -19,8 +22,16 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-const { requireAuth } = require("./middleware/authMiddleware");
-const authRoutes = require("./routes/authRoutes");
+
+
+
+  const { requireAuth } = require("./middleware/authMiddleware");
+const {
+  detectCrisisLanguage,
+  getCrisisResponse
+} = require("./models/crisisModel");
+
+  const authRoutes = require("./routes/authRoutes");
 app.use("/auth", authRoutes);
 
 app.post('/chat',requireAuth, async (req, res) => {
@@ -28,9 +39,13 @@ app.post('/chat',requireAuth, async (req, res) => {
     if (!Array.isArray(messages) || messages.length === 0) {
         return res.status(400).json({ error: 'message is required' });
     }
+    const latestMessage = messages[messages.length-1];
+    if(detectCrisisLanguage(latestMessage.text)){
+        return res.json({message: getCrisisResponse(), isCrisisResponse: true})
+    }
     try {
         const reply = await getReply(messages);
-        res.json({ message: reply });
+        res.json({ message: reply , isCrisisResponse: false});
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Something went wrong' });
