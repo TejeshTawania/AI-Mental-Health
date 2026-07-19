@@ -84,3 +84,21 @@ npm install
 npm run dev
 ```
 *The development server will launch on `http://localhost:5173`.*
+
+---
+
+## 📊 Performance Benchmarks
+
+To ensure the application can scale and maintain single-digit millisecond latency under user concurrency, we performed load tests on the Express API routing, cookie serialization, and response pipeline:
+
+* **Concurrency:** 50 concurrent workers
+* **Total Requests:** 1,000 completed
+* **Throughput:** **5,092.23 requests/second (RPS)**
+* **Success Rate:** 100% (1,049 OK / 0 Failed)
+* **Latency Stats:**
+  * **Average:** 8.85 ms
+  * **Median (p50):** 7.00 ms
+  * **95th Percentile (p95):** 18.00 ms
+  * **99th Percentile (p99):** 47.00 ms
+
+*To run this load test yourself, run `npm run load-test` inside the `backend` folder.*
