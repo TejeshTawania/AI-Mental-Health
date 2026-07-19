@@ -109,3 +109,32 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+
+@import "tailwindcss";
+
+body {
+  background-color: #1C2321;
+  color: #F2F0E9;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.chat-input-field {
+  background-color: #232B28;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #3A443F;
+  color: #F2F0E9;
+  outline: none;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.chat-input-field:focus {
+  border-color: #7A9B8E;
+}
+
+.chat-input-field::placeholder {
+  color: #5E6862;
+}

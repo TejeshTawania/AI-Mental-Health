@@ -17,9 +17,9 @@ function getCrisisResponse(){
   return (
      "It sounds like you might be going through something really difficult right now. " +
     "I'm not able to provide crisis support, but please reach out to people who can help right away:\n\n" +
-    "- **call 14416 available 24/7\n" +
+    "- **Call 14416** (available 24/7)\n" +
     
-    "- If you're outside the India, please search for your local crisis line or go to your nearest emergency room.\n\n" +
+    "- If you're outside India, please search for your local crisis line or go to your nearest emergency room.\n\n" +
     "You don't have to go through this alone."
   )
 }

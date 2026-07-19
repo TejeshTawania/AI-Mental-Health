@@ -1,12 +1,17 @@
+const {SYSTEM_PROMPT} = require("./systemprompt");
+
+
 async function getReply(messageHistory) {
   if (!process.env.GROQ_API_KEY) {
     throw new Error("GROQ_API_KEY is not configured in your .env file.");
   }
 
-  const formattedMessages = messageHistory.map((msg) => ({
+  const formattedMessages = [
+    {role: "system",content : SYSTEM_PROMPT},
+    ...messageHistory.map((msg) => ({
     role: msg.role === "bot" ? "assistant" : "user",
     content: msg.text,
-  }));
+  }))];
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 15000);
