@@ -1,7 +1,12 @@
-async function getReply(userMessage) {
+async function getReply(messageHistory) {
   if (!process.env.GROQ_API_KEY) {
     throw new Error("GROQ_API_KEY is not configured in your .env file.");
   }
+
+  const formattedMessages = messageHistory.map((msg) => ({
+    role: msg.role === "bot" ? "assistant" : "user",
+    content: msg.text,
+  }));
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 15000);
@@ -15,7 +20,7 @@ async function getReply(userMessage) {
       },
       body: JSON.stringify({
         model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
-        messages: [{ role: "user", content: userMessage }],
+        messages: formattedMessages,
       }),
       signal: controller.signal,
     });

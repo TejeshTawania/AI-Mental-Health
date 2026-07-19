@@ -1,26 +1,35 @@
 require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") });
-const mongoose = require("mongoose");
+
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
+
+const app = express();
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
+app.use(express.json());
+app.use(cookieParser());
 const { getReply } = require("./models/chatModel");
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-  
-const app = express();
-app.use(cors());
-app.use(express.json());
+const { requireAuth } = require("./middleware/authMiddleware");
+const authRoutes = require("./routes/authRoutes");
+app.use("/auth", authRoutes);
 
-
-app.post('/chat', async (req, res) => {
-    const userMessage = req.body.message;
-    if (!userMessage || typeof userMessage !== 'string') {
+app.post('/chat',requireAuth, async (req, res) => {
+    const messages = req.body.messages;
+    if (!Array.isArray(messages) || messages.length === 0) {
         return res.status(400).json({ error: 'message is required' });
     }
     try {
-        const reply = await getReply(userMessage);
+        const reply = await getReply(messages);
         res.json({ message: reply });
     } catch (err) {
         console.error(err);
