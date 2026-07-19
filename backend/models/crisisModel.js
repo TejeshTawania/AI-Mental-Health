@@ -17,9 +17,9 @@ function getCrisisResponse(){
   return (
      "It sounds like you might be going through something really difficult right now. " +
     "I'm not able to provide crisis support, but please reach out to people who can help right away:\n\n" +
-    "- **988 Suicide & Crisis Lifeline** (US) — call or text 988, available 24/7\n" +
-    "- **Crisis Text Line** — text HOME to 741741\n" +
-    "- If you're outside the US, please search for your local crisis line or go to your nearest emergency room.\n\n" +
+    "- **call 14416 available 24/7\n" +
+    
+    "- If you're outside the India, please search for your local crisis line or go to your nearest emergency room.\n\n" +
     "You don't have to go through this alone."
   )
 }

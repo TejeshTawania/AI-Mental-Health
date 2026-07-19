@@ -1,5 +1,6 @@
 import { useState } from "react";
-import AuthForm from "../components/AuthForm";
+import AuthForm from "./components/AuthForm";
+import CrisisBanner from "./components/CrisisBanner";
 
 const App = () => {
   const [userEmail, setUserEmail] = useState(null);
@@ -55,33 +56,41 @@ const App = () => {
   };
 
   if (!userEmail) {
-    return <AuthForm onAuthSuccess={setUserEmail} />;
+    return (
+      <>
+        <CrisisBanner />
+        <AuthForm onAuthSuccess={setUserEmail} />
+      </>
+    );
   }
 
   return (
-    <div className="text-center mt-0.5">
-      <div>
-        Logged in as {userEmail}
-        <button onClick={handleLogout}>Logout</button>
-      </div>
-      <div>
-        {messages.map((msg, i) => (
-          <div key={i}>
-            <strong>{msg.role === "user" ? "You" : "Bot"}:</strong> {msg.text}
-          </div>
-        ))}
-      </div>
+    <>
+      <CrisisBanner />
+      <div className="text-center mt-0.5">
+        <div>
+          Logged in as {userEmail}
+          <button onClick={handleLogout}>Logout</button>
+        </div>
+        <div>
+          {messages.map((msg, i) => (
+            <div key={i}>
+              <strong>{msg.role === "user" ? "You" : "Bot"}:</strong> {msg.text}
+            </div>
+          ))}
+        </div>
 
-      {loading && <div>Thinking...</div>}
-      {error && <div style={{ color: "red" }}>{error}</div>}
+        {loading && <div>Thinking...</div>}
+        {error && <div style={{ color: "red" }}>{error}</div>}
 
-      <input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-      />
-      <button onClick={sendMessage}>Send</button>
-    </div>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+        />
+        <button onClick={sendMessage}>Send</button>
+      </div>
+    </>
   );
 };
 
