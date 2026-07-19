@@ -14,7 +14,7 @@ const ProgressView = () => {
   const [streak, setStreak] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/checkin", { credentials: "include" })
+    fetch("/api/checkin", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
         setHistory(data.history);

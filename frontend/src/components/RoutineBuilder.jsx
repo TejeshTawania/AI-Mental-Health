@@ -12,7 +12,7 @@ const RoutineBuilder = () => {
   const [generating, setGenerating] = useState(false);
 
   const fetchRoutines = async () => {
-    const res = await fetch("http://localhost:3000/api/routine", {
+    const res = await fetch("/api/routine", {
       credentials: "include",
     });
     if (res.ok) {
@@ -23,7 +23,7 @@ const RoutineBuilder = () => {
 
   useEffect(() => {
     let active = true;
-    fetch("http://localhost:3000/api/routine", { credentials: "include" })
+    fetch("/api/routine", { credentials: "include" })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data && active) setSavedRoutines(data);
@@ -35,7 +35,7 @@ const RoutineBuilder = () => {
 
   const pickTemplate = async (c) => {
     setConcern(c);
-    const res = await fetch(`http://localhost:3000/api/routine/template/${c}`, {
+    const res = await fetch(`/api/routine/template/${c}`, {
       credentials: "include",
     });
     const data = await res.json();
@@ -49,7 +49,7 @@ const RoutineBuilder = () => {
     setTemplate([]);
     setSelected([]);
     try {
-      const res = await fetch(`http://localhost:3000/api/routine/ai/${c}`, {
+      const res = await fetch(`/api/routine/ai/${c}`, {
         credentials: "include",
       });
       const data = await res.json();
@@ -70,7 +70,7 @@ const RoutineBuilder = () => {
 
   const saveRoutine = async () => {
     setSaving(true);
-    await fetch("http://localhost:3000/api/routine", {
+    await fetch("/api/routine", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -95,7 +95,7 @@ const RoutineBuilder = () => {
       }),
     );
 
-    await fetch(`http://localhost:3000/api/routine/${routineId}/toggle`, {
+    await fetch(`/api/routine/${routineId}/toggle`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -106,7 +106,7 @@ const RoutineBuilder = () => {
   const handleDeleteRoutine = async (routineId) => {
     setSavedRoutines((prev) => prev.filter((r) => r._id !== routineId));
 
-    await fetch(`http://localhost:3000/api/routine/${routineId}`, {
+    await fetch(`/api/routine/${routineId}`, {
       method: "DELETE",
       credentials: "include",
     });

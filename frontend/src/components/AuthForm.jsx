@@ -13,7 +13,7 @@ const AuthForm = ({ onAuthSuccess }) => {
     setLoading(true);
     const endpoint = isLogin ? "/auth/login" : "/auth/signup";
     try {
-      const res = await fetch("http://localhost:3000" + endpoint, {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

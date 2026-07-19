@@ -18,7 +18,7 @@ const ChatView = () => {
 
     try {
       const historyToSend = updatedMessages.slice(-10);
-      const res = await fetch("http://localhost:3000/chat", {
+      const res = await fetch("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

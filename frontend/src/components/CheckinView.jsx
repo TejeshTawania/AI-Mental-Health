@@ -26,7 +26,7 @@ const CheckinView = () => {
   const [saving, setSaving] = useState(false);
 
   const fetchHistory = async () => {
-    const res = await fetch("http://localhost:3000/api/checkin", {
+    const res = await fetch("/api/checkin", {
       credentials: "include",
     });
     if (res.ok) {
@@ -37,7 +37,7 @@ const CheckinView = () => {
 
   useEffect(() => {
     let active = true;
-    fetch("http://localhost:3000/api/checkin", { credentials: "include" })
+    fetch("/api/checkin", { credentials: "include" })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data && active) setHistory(data.history);
@@ -49,7 +49,7 @@ const CheckinView = () => {
 
   const submitCheckin = async () => {
     setSaving(true);
-    await fetch("http://localhost:3000/api/checkin", {
+    await fetch("/api/checkin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
