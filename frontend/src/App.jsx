@@ -1,6 +1,8 @@
 import { useState } from "react";
+import AuthForm from "../components/AuthForm";
 
 const App = () => {
+  const [userEmail, setUserEmail] = useState(null);
   const [messages, setMessages] = useState([]); // {role: 'user'|'bot', text: string}[]
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,13 +16,22 @@ const App = () => {
     setInput("");
     setLoading(true);
     setError(null);
-
+    const updatedMessages = [...messages, userMessage];
     try {
+      const historyToSend = updatedMessages.slice(-10);
       const res = await fetch("http://localhost:3000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage.text }),
+        credentials: "include",
+        body: JSON.stringify({
+          messages: historyToSend,
+        }),
       });
+
+      if (res.status === 401) {
+        setUserEmail(null);
+        throw new Error("Session expired. Please log in again.");
+      }
 
       if (!res.ok) throw new Error("Server returned an error");
 
@@ -34,8 +45,25 @@ const App = () => {
     }
   };
 
+  const handleLogout = async () => {
+    await fetch("http://localhost:3000/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    setUserEmail(null);
+    setMessages([]);
+  };
+
+  if (!userEmail) {
+    return <AuthForm onAuthSuccess={setUserEmail} />;
+  }
+
   return (
     <div className="text-center mt-0.5">
+      <div>
+        Logged in as {userEmail}
+        <button onClick={handleLogout}>Logout</button>
+      </div>
       <div>
         {messages.map((msg, i) => (
           <div key={i}>
