@@ -30,11 +30,15 @@ app.use(
     origin: (origin, callback) => {
       // Allow requests with no origin header (like mobile apps, curls, or serverless rewrites)
       if (!origin) return callback(null, true);
-      if (ALLOWED_ORIGINS.indexOf(origin) === -1) {
-        const errorMsg = `CORS Policy Error: Origin '${origin}' is not authorized.`;
-        return callback(new Error(errorMsg), false);
+      // Allow listed origins and any Vercel preview deployment
+      if (
+        ALLOWED_ORIGINS.includes(origin) ||
+        origin.endsWith(".vercel.app")
+      ) {
+        return callback(null, true);
       }
-      return callback(null, true);
+      const errorMsg = `CORS Policy Error: Origin '${origin}' is not authorized.`;
+      return callback(new Error(errorMsg), false);
     },
     credentials: true,
   }),
