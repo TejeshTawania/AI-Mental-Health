@@ -1,30 +1,13 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "backend/server.js",
-      "use": "@vercel/node"
+      "source": "/(auth|api|chat)(/.*)?",
+      "destination": "/api/index.js"
     },
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(auth|api|chat)(/.*)?",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "frontend/assets/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
+      "source": "/(.*)",
+      "destination": "/frontend/dist/$1"
     }
   ]
 }
