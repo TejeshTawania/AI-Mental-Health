@@ -25,6 +25,11 @@ An empathetic, interactive wellness companion designed to support daily self-ref
 * **Interactive Progress Checklist:** Check off routine items as you do them, triggering a celebratory congratulations banner once everything is checked off.
 * **Midnight Auto-Reset:** Routines automatically reset to unchecked at **12:00 midnight** local time every day so you can start fresh.
 
+### 💳 Secure Premium Subscriptions
+* **Razorpay Integration:** Securely process premium upgrades using the Razorpay payment gateway.
+* **Cryptographic Verification:** Backend HMAC SHA-256 signature verification prevents fraudulent transactions.
+* **Instant UI Reactivity:** The UI dynamically unlocks premium features upon successful payment verification without requiring a refresh.
+
 ---
 
 ## 🛠️ Technology Stack
@@ -34,6 +39,7 @@ An empathetic, interactive wellness companion designed to support daily self-ref
   * **Tailwind CSS** — Utility-first styling.
   * **Recharts** — For interactive trend charts.
   * **Lucide Icons** — Clean iconography.
+  * **Razorpay SDK** — Secure checkout widget.
 
 * **Backend:**
   * **Node.js & Express** — Web application server.
@@ -59,6 +65,8 @@ MONGODB_URI=your_mongodb_connection_uri
 JWT_SECRET=your_jwt_secret_token
 GROQ_API_KEY=your_groq_api_key
 GROQ_MODEL=llama-3.3-70b-versatile
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
 ```
 
 ---
@@ -89,16 +97,13 @@ npm run dev
 
 ## 📊 Performance Benchmarks
 
-To ensure the application can scale and maintain single-digit millisecond latency under user concurrency, we performed load tests on the Express API routing, cookie serialization, and response pipeline:
+To ensure the application can scale and maintain low latency under user concurrency, we designed a custom Node.js load-testing script to benchmark both raw backend performance and real-world production metrics.
 
-* **Concurrency:** 50 concurrent workers
-* **Total Requests:** 1,000 completed
-* **Throughput:** **5,092.23 requests/second (RPS)**
-* **Success Rate:** 100% (1,049 OK / 0 Failed)
-* **Latency Stats:**
-  * **Average:** 8.85 ms
-  * **Median (p50):** 7.00 ms
-  * **95th Percentile (p95):** 18.00 ms
-  * **99th Percentile (p99):** 47.00 ms
+### Local Environment (Raw Express/Node.js Performance)
+* **Throughput:** ~4,900 requests/second (RPS)
+* **Average Latency:** 8.15 ms
 
-*To run this load test yourself, run `npm run load-test` inside the `backend` folder.*
+### Production Environment (Vercel Serverless Deployment)
+* **Real-World Latency:** ~233 ms *(Includes network transit, SSL handshake, and edge routing overhead)*.
+
+*To run this load test yourself, run `node tests/loadTest.js` inside the `backend` folder.*
