@@ -3,7 +3,7 @@ import { Sparkles } from "lucide-react";
 const PremiumUnlock = ({ onUnlocked }) => {
   const handlePayment = async () => {
     const orderRes = await fetch(
-      "http://localhost:3000/api/payment/create-order",
+      "/api/payment/create-order",
       {
         method: "POST",
         credentials: "include",
@@ -20,7 +20,7 @@ const PremiumUnlock = ({ onUnlocked }) => {
       description: "Unlock premium routines",
       handler: async (response) => {
         const verifyRes = await fetch(
-          "http://localhost:3000/api/payment/verify",
+          "/api/payment/verify",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
