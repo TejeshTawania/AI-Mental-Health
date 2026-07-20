@@ -4,7 +4,7 @@ An empathetic, interactive wellness companion designed to support daily self-ref
 
 ---
 
-# Live Link :-  https://ai-mental-health-qyxd.vercel.app/
+# Live Link :-  https://ai-mental-health-ochre.vercel.app/
 
 ## 🚀 Key Features
 
