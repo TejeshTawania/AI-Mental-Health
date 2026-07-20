@@ -3,9 +3,11 @@ import { MessageCircle, ListChecks, ClipboardList, LogOut } from "lucide-react";
 import ChatView from "./ChatView";
 import RoutineBuilder from "./RoutineBuilder";
 import CheckinView from "./CheckinView";
+import PremiumUnlock from "./PremiumUnlock";
 
 const Dashboard = ({ userEmail, onLogout }) => {
   const [activeTab, setActiveTab] = useState("chat");
+  const [isPremium, setIsPremium] = useState(false);
 
   const tabs = [
     { id: "chat", label: "Chat with AI", icon: MessageCircle },
@@ -33,6 +35,11 @@ const Dashboard = ({ userEmail, onLogout }) => {
         ))}
 
         <div className="mt-auto flex flex-col gap-1">
+          {!isPremium && (
+            <div className="px-2 mb-2 hidden md:block">
+              <PremiumUnlock onUnlocked={() => setIsPremium(true)} />
+            </div>
+          )}
           {userEmail && (
             <span className="hidden md:block text-xs text-[#5E6862] px-3 py-1 truncate" title={userEmail}>
               {userEmail}

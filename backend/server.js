@@ -12,7 +12,9 @@ if (process.env.NODE_ENV !== "test") {
   const REQUIRED_ENV = ["MONGODB_URI", "JWT_SECRET", "GROQ_API_KEY"];
   for (const envVar of REQUIRED_ENV) {
     if (!process.env[envVar]) {
-      console.error(`CRITICAL BOOT CONFIG ERROR: Environment variable "${envVar}" is missing.`);
+      console.error(
+        `CRITICAL BOOT CONFIG ERROR: Environment variable "${envVar}" is missing.`,
+      );
       process.exit(1);
     }
   }
@@ -31,10 +33,7 @@ app.use(
       // Allow requests with no origin header (like mobile apps, curls, or serverless rewrites)
       if (!origin) return callback(null, true);
       // Allow listed origins and any Vercel preview deployment
-      if (
-        ALLOWED_ORIGINS.includes(origin) ||
-        origin.endsWith(".vercel.app")
-      ) {
+      if (ALLOWED_ORIGINS.includes(origin) || origin.endsWith(".vercel.app")) {
         return callback(null, true);
       }
       const errorMsg = `CORS Policy Error: Origin '${origin}' is not authorized.`;
@@ -52,7 +51,8 @@ app.get("/api/health", (req, res) => {
     status: "healthy",
     timestamp: new Date().toISOString(),
     uptime: `${Math.floor(process.uptime())}s`,
-    database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+    database:
+      mongoose.connection.readyState === 1 ? "connected" : "disconnected",
   });
 });
 
@@ -94,6 +94,9 @@ app.post("/chat", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Something went wrong" });
   }
 });
+
+const paymentRoutes = require("./routes/paymentroutes");
+app.use("/api/payment", paymentRoutes);
 
 const PORT = process.env.PORT || 3000;
 if (!process.env.VERCEL) {
